@@ -26,31 +26,37 @@ router.post('/creatures', function (req, res, next) {
 });
 
 router.get('/creatures/:id', function(req, res, next) {
-    var id = router.params.id;
+    var id = req.params.id;
     console.log('blah:', id);
-  var query = Creature.findById(id);
-
-  query.exec(function (err, creature){
-    if (err) { return next(err); }
-    if (!creature) { return next(new Error('can\'t find creature: ' + id)); }
-
-    req.creature = creature;
-    return next();
-  });
-});
-
-router.param('creature', function (req, res, next, id) {
     var query = Creature.findById(id);
-    console.log('single Creature:', id);
 
     query.exec(function (err, creature) {
         if (err) { return next(err); }
-        if (!creature) { return next(new Error('can\'t find creature')); }
+        
+        if (!creature) { return next(new Error('can\'t find creature: ' + id)); }
+        
+        res.json(creature);
+        
+        // if (err) { next(new Error('can\'t find blahablaha: ' + id)); }
+        // 
 
-        req.creature = creature;
-        return next();
+        // req.creature = creature;
+        // return next();
     });
 });
+
+// router.param('creature', function (req, res, next, id) {
+//     var query = Creature.findById(id);
+//     console.log('single Creature:', id);
+
+//     query.exec(function (err, creature) {
+//         if (err) { return next(err); }
+//         if (!creature) { return next(new Error('can\'t find creature')); }
+
+//         req.creature = creature;
+//         return next();
+//     });
+// });
 
 
 // router.get('/posts', function(req, res, next) {
